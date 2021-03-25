@@ -3,31 +3,39 @@ import time
 
 class RPi_plug:
 
+    # Set encoder mappings for plugs 1, 2, 3, 4, & -1 (all)
+    _encoder_dict = {
+        -1: [False, True, True], 
+        1: [True, True, True], 
+        2: [True, True, False], 
+        3: [True, False, True], 
+        4: [True, False, False]
+    }
+
     def __init__(self):
         
         # Use board numbering
         GPIO.setmode(GPIO.BOARD)
 
-        # Select the GPIO pins used for the encoder K0-K3 data inputs
-        GPIO.setup(13, GPIO.OUT)
-        GPIO.setup(16, GPIO.OUT)
-        GPIO.setup(15, GPIO.OUT)
-        GPIO.setup(11, GPIO.OUT)
+        # Select GPIO pins used for D0-D3 encoder inputs
+        GPIO.setup(13, GPIO.OUT) # D3
+        GPIO.setup(16, GPIO.OUT) # D2
+        GPIO.setup(15, GPIO.OUT) # D1
+        GPIO.setup(11, GPIO.OUT) # D0
         
-        # Select the signal to select ASK/FSK
+        # Select GPIO pin for OOK (On-Off-Keying)
         GPIO.setup(18, GPIO.OUT)
 
-        # Select the signal used to enable/disable the modulator
-        GPIO.setup(22, GPIO.OUT)
-
-        # Disable the modulator by setting CE pin low
-        GPIO.output(22, False)
-
-        # Set the modulator to ASK for On Off Keying 
-        # by setting MODSEL pin low
+        # Set MODSEL GPIO pin low to enable OOK
         GPIO.output(18, False)
 
-        # Initialise K0-K3 inputs of the encoder to 0000
+        # Select GPIO pin to enable/disable modulator
+        GPIO.setup(22, GPIO.OUT)
+
+        # Set CE GPIO pin low to disable modulator
+        GPIO.output(22, False)
+
+        # Initialise D0-D3 inputs
         GPIO.output(13, False)
         GPIO.output(16, False)
         GPIO.output(15, False)
@@ -35,12 +43,15 @@ class RPi_plug:
 
     def _modulator(self):
 
-        # Let encoder settle
+        # Allow encoder to settle
         time.sleep(0.1)
+
         # Enable modulator
         GPIO.output(22, True)
-        # Wait
+
+        # Wait for signal transmission
         time.sleep(0.25)
+
         # Disable modulator
         GPIO.output(22, False)
 
@@ -54,13 +65,20 @@ class RPi_plug:
             if socket_num not in [1, 2, 3, 4]:
                 raise ValueError("socket_num must be in range [1, 2, 3, 4]")
 
-        # If socket_num == None then turn on all plugs (1011)
+        # Enable selected encoder pins
         if not socket_num:
             GPIO.output(13, True)
-            GPIO.output(16, False)
-            GPIO.output(15, True)
-            GPIO.output(11, True)
+            GPIO.output(16, self._encoder_dict[-1][0])
+            GPIO.output(15, self._encoder_dict[-1][1])
+            GPIO.output(11, self._encoder_dict[-1][2])
             self._modulator()
+        else:
+            GPIO.output(13, True)
+            GPIO.output(16, self._encoder_dict[socket_num][0])
+            GPIO.output(15, self._encoder_dict[socket_num][1])
+            GPIO.output(11, self._encoder_dict[socket_num][2])
+            self._modulator()
+
 
     def socket_off(self, socket_num=None):
         
@@ -72,19 +90,28 @@ class RPi_plug:
             if socket_num not in [1, 2, 3, 4]:
                 raise ValueError("socket_num must be in range [1, 2, 3, 4]")
 
-        # If socket_num == None then turn off all plugs (0011)
+        # Enable selected encoder pins
         if not socket_num:
             GPIO.output(13, False)
-            GPIO.output(16, False)
-            GPIO.output(15, True)
-            GPIO.output(11, True)
+            GPIO.output(16, self._encoder_dict[-1][0])
+            GPIO.output(15, self._encoder_dict[-1][1])
+            GPIO.output(11, self._encoder_dict[-1][2])
+            self._modulator()
+        else:
+            GPIO.output(13, False)
+            GPIO.output(16, self._encoder_dict[socket_num][0])
+            GPIO.output(15, self._encoder_dict[socket_num][1])
+            GPIO.output(11, self._encoder_dict[socket_num][2])
             self._modulator()
 
     def cleanup(self):
+
+        # Clean up GPIO pins
         GPIO.cleanup()
 
 
 if __name__ == "__main__":
+    
     plug = RPi_plug()
     plug.socket_on()
     time.sleep(10)
