@@ -80,19 +80,19 @@ class MorseCode:
 
     def _dot(self):
         self._plug.socket_on()
-        time.sleep(0.4)
-        self._plug.socket_off()
         time.sleep(0.3)
+        self._plug.socket_off()
+        time.sleep(0.2)
 
 
     def _dash(self):
         self._plug.socket_on()
         time.sleep(0.8)
         self._plug.socket_off()
-        time.sleep(0.3)
+        time.sleep(0.2)
 
     def _space(self):
-        time.sleep(1)
+        time.sleep(0.6)
 
     def light_morse(self):
         
@@ -111,14 +111,14 @@ if __name__ == "__main__":
 
     try:
         morse = MorseCode(
-            text = input("Please input text": ),
+            text = input("Please input text: "),
             plug = plug
         )
 
         print(
             f"""
             Text: {morse.text}
-            Morse Code: {morse.text_to_morse())}
+            Morse Code: {morse.text_to_morse()}
             """
         )
 
