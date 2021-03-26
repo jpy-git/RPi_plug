@@ -2,6 +2,8 @@ import RPi.GPIO as GPIO
 import time
 
 class RPi_plug:
+    """Class to connect to and control Energenie Remote Control Sockets via Raspberry Pi
+    """
 
     # Set encoder mappings for plugs 1, 2, 3, 4, & -1 (all)
     _encoder_dict = {
@@ -13,6 +15,8 @@ class RPi_plug:
     }
 
     def __init__(self):
+        """Create instance of RPi_plug
+        """
         
         # Use board numbering
         GPIO.setmode(GPIO.BOARD)
@@ -42,6 +46,8 @@ class RPi_plug:
         GPIO.output(11, False)
 
     def _modulator(self):
+        """Send modulator signal to trigger plug
+        """
 
         # Allow encoder to settle
         time.sleep(0.1)
@@ -55,7 +61,14 @@ class RPi_plug:
         # Disable modulator
         GPIO.output(22, False)
 
-    def socket_on(self, socket_num=None):
+    def on(self, socket_num=None):
+        """Function to turn on a specified plug
+
+        Parameters
+        ----------
+        socket_num : int or None, optional
+            integer representing plug to turn on, by default None
+        """
         
         # Validate inputs
         if socket_num:
@@ -80,8 +93,15 @@ class RPi_plug:
             self._modulator()
 
 
-    def socket_off(self, socket_num=None):
-        
+    def off(self, socket_num=None):
+        """Function to turn off a specified plug
+
+        Parameters
+        ----------
+        socket_num : int or None, optional
+            integer representing plug to turn off, by default None
+        """
+
         # Validate inputs
         if socket_num:
             if not isinstance(socket_num, int):
@@ -105,7 +125,9 @@ class RPi_plug:
             self._modulator()
 
     def cleanup(self):
-
+        """Clean up GPIO pins
+        """
+        
         # Clean up GPIO pins
         GPIO.cleanup()
 
@@ -113,7 +135,7 @@ class RPi_plug:
 if __name__ == "__main__":
     
     plug = RPi_plug()
-    plug.socket_on()
+    plug.on()
     time.sleep(10)
-    plug.socket_off()
+    plug.off()
     plug.cleanup()
