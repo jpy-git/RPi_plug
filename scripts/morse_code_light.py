@@ -113,16 +113,12 @@ class MorseCode:
         return morse_string
 
     def _dot(self):
-<<<<<<< HEAD
         """Short pulse representing Morse code dot (.)
         """
 
         self._plug.on()
         time.sleep(0.4)
         self._plug.off()
-=======
-        self._plug.socket_on()
->>>>>>> 2f8ade4d81cf632d10d34f373a266c5a798a452b
         time.sleep(0.3)
         self._plug.socket_off()
         time.sleep(0.2)
@@ -134,7 +130,6 @@ class MorseCode:
 
         self._plug.on()
         time.sleep(0.8)
-<<<<<<< HEAD
         self._plug.off()
         time.sleep(0.3)
 
@@ -143,13 +138,6 @@ class MorseCode:
         """
 
         time.sleep(1)
-=======
-        self._plug.socket_off()
-        time.sleep(0.2)
-
-    def _space(self):
-        time.sleep(0.6)
->>>>>>> 2f8ade4d81cf632d10d34f373a266c5a798a452b
 
     def light_morse(self):
         """Convert Morse code string to light pulses on remote lamp
