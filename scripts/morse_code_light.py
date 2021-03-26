@@ -92,7 +92,7 @@ class MorseCode:
         time.sleep(0.2)
 
     def _space(self):
-        time.sleep(0.6)
+        time.sleep(0.8)
 
     def light_morse(self):
         
