@@ -1,59 +1,59 @@
 from RPi_plug import RPi_plug
 import time
 
+
 class MorseCode:
-    """Class to convert text to Morse code and display on remote lamp
-    """
+    """Class to convert text to Morse code and display on remote lamp"""
 
     # Dictionary to map text character to Morse code
-    morse_code_dict = { 
-        'A':'.-', 
-        'B':'-...',
-        'C':'-.-.', 
-        'D':'-..', 
-        'E':'.',
-        'F':'..-.', 
-        'G':'--.', 
-        'H':'....',
-        'I':'..', 
-        'J':'.---', 
-        'K':'-.-',
-        'L':'.-..', 
-        'M':'--', 
-        'N':'-.',
-        'O':'---', 
-        'P':'.--.', 
-        'Q':'--.-',
-        'R':'.-.', 
-        'S':'...', 
-        'T':'-',
-        'U':'..-', 
-        'V':'...-', 
-        'W':'.--',
-        'X':'-..-', 
-        'Y':'-.--', 
-        'Z':'--..',
-        '1':'.----', 
-        '2':'..---', 
-        '3':'...--',
-        '4':'....-', 
-        '5':'.....', 
-        '6':'-....',
-        '7':'--...', 
-        '8':'---..', 
-        '9':'----.',
-        '0':'-----', 
-        ',':'--..--', 
-        '.':'.-.-.-',
-        '?':'..--..', 
-        '/':'-..-.', 
-        '-':'-....-',
-        '(':'-.--.', 
-        ')':'-.--.-',
-        ' ': '_'
+    morse_code_dict = {
+        "A": ".-",
+        "B": "-...",
+        "C": "-.-.",
+        "D": "-..",
+        "E": ".",
+        "F": "..-.",
+        "G": "--.",
+        "H": "....",
+        "I": "..",
+        "J": ".---",
+        "K": "-.-",
+        "L": ".-..",
+        "M": "--",
+        "N": "-.",
+        "O": "---",
+        "P": ".--.",
+        "Q": "--.-",
+        "R": ".-.",
+        "S": "...",
+        "T": "-",
+        "U": "..-",
+        "V": "...-",
+        "W": ".--",
+        "X": "-..-",
+        "Y": "-.--",
+        "Z": "--..",
+        "1": ".----",
+        "2": "..---",
+        "3": "...--",
+        "4": "....-",
+        "5": ".....",
+        "6": "-....",
+        "7": "--...",
+        "8": "---..",
+        "9": "----.",
+        "0": "-----",
+        ",": "--..--",
+        ".": ".-.-.-",
+        "?": "..--..",
+        "/": "-..-.",
+        "-": "-....-",
+        "(": "-.--.",
+        ")": "-.--.-",
+        " ": "_",
     }
 
-    def __init__(self, text, plug):
+    def __init__(self, text: str, plug: RPi_plug) -> None:
         """function to initialise MorseCode class
 
         Parameters
@@ -72,7 +72,7 @@ class MorseCode:
         self._plug = plug
 
     @property
-    def text(self):
+    def text(self) -> str:
         """Getter for text attribute
 
         Returns
@@ -84,7 +84,7 @@ class MorseCode:
         return self._text
 
     @text.setter
-    def text(self, new_text):
+    def text(self, new_text: str) -> None:
         """Setter for text attribute
 
         Parameters
@@ -98,7 +98,7 @@ class MorseCode:
         else:
             raise TypeError("new_text must be a string")
 
-    def text_to_morse(self):
+    def text_to_morse(self) -> str:
         """Covert text to Morse code string
 
         Returns
@@ -106,40 +106,42 @@ class MorseCode:
         str
             Morse code string consisting of dots (.), dashes (-), & spaces (_)
         """
-        
+
         input_string_list = list(self._text.upper())
-        morse_string = "_".join([self.morse_code_dict[char] for char in input_string_list if char in self.morse_code_dict])
+        morse_string = "_".join(
+            [
+                self.morse_code_dict[char]
+                for char in input_string_list
+                if char in self.morse_code_dict
+            ]
+        )
 
         return morse_string
 
-    def _dot(self):
-        """Short pulse representing Morse code dot (.)
-        """
+    def _dot(self) -> None:
+        """Short pulse representing Morse code dot (.)"""
 
         self._plug.on()
         time.sleep(0.3)
         self._plug.off()
         time.sleep(0.1)
 
-    def _dash(self):
-        """Long pulse representing Morse code dash (-)
-        """
+    def _dash(self) -> None:
+        """Long pulse representing Morse code dash (-)"""
 
         self._plug.on()
         time.sleep(0.7)
         self._plug.off()
         time.sleep(0.1)
 
-    def _space(self):
-        """Delay for spaces in Morse code
-        """
+    def _space(self) -> None:
+        """Delay for spaces in Morse code"""
 
         time.sleep(0.8)
 
-    def light_morse(self):
-        """Convert Morse code string to light pulses on remote lamp
-        """
-        
+    def light_morse(self) -> None:
+        """Convert Morse code string to light pulses on remote lamp"""
+
         for char in self.text_to_morse():
 
             if char == ".":
@@ -149,19 +151,16 @@ class MorseCode:
             else:
                 self._space()
 
+
 def main():
-    """Main function for morse_code_light.py
-    """
+    """Main function for morse_code_light.py"""
 
     # Create RPi_plug instance
     plug = RPi_plug()
 
     try:
         # Request user input text and convert to morse code
-        morse = MorseCode(
-            text = input("Please input text: "),
-            plug = plug
-        )
+        morse = MorseCode(text=input("Please input text: "), plug=plug)
 
         # Print inputted text and translated Morse code
         print(
@@ -178,10 +177,8 @@ def main():
         # Clean up GPIO pins
         plug.cleanup()
 
+
 if __name__ == "__main__":
 
     # Initiate main function
     main()
-
-
-    
