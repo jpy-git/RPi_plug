@@ -117,25 +117,24 @@ class MorseCode:
         """
 
         self._plug.on()
-        time.sleep(0.4)
-        self._plug.off()
         time.sleep(0.3)
-
+        self._plug.off()
+        time.sleep(0.1)
 
     def _dash(self):
         """Long pulse representing Morse code dash (-)
         """
 
         self._plug.on()
-        time.sleep(0.8)
+        time.sleep(0.7)
         self._plug.off()
-        time.sleep(0.3)
+        time.sleep(0.1)
 
     def _space(self):
         """Delay for spaces in Morse code
         """
 
-        time.sleep(1)
+        time.sleep(0.8)
 
     def light_morse(self):
         """Convert Morse code string to light pulses on remote lamp
