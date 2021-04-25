@@ -120,8 +120,6 @@ class MorseCode:
         time.sleep(0.4)
         self._plug.off()
         time.sleep(0.3)
-        self._plug.socket_off()
-        time.sleep(0.2)
 
 
     def _dash(self):
